@@ -1,0 +1,17 @@
+# Dependencies and generated files
+node_modules/
+
+# Runtime data created by the local API
+data/*.json
+
+# Environment / editor files
+.env
+.env.*
+!.env.example
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
