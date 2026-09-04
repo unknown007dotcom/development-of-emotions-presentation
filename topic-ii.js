@@ -173,4 +173,69 @@
     careGuide.card.animate([{ opacity: .58, transform: 'translateY(3px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 130, easing: 'ease-out' });
   }
   $$('.care-stage').forEach(tab => tab.addEventListener('click', () => renderCareGuide(tab.dataset.careStage)));
+
+  // Topic II knowledge check — immediate feedback, matching Topic I
+  const quizQuestions = [
+    {
+      question: 'Which statement best describes emotional development across the lifespan?',
+      options: ['It ends once a person reaches adolescence.', 'It continues throughout life and is influenced by maturation, relationships, experiences, culture, and health.', 'It is fixed at birth and cannot be changed by experience.'],
+      answer: 1,
+      explanation: 'Correct. Emotional development is lifelong. Biology, relationships, health, culture, and lived experiences influence how people understand and regulate emotion.'
+    },
+    {
+      question: 'A 78-year-old patient is quiet after moving away from home. Which nursing response is most therapeutic?',
+      options: ['“You should focus on the positive; there is no reason to be sad.”', '“This move may feel like a loss. Would you like to tell me what you miss or what could help you feel more settled?”', '“Let us avoid talking about feelings and focus only on your medications.”'],
+      answer: 1,
+      explanation: 'Correct. The response acknowledges possible grief without making assumptions, gives the person dignity, and invites meaningful support.'
+    },
+    {
+      question: 'An adult caring for family members reports poor sleep and irritability. What is the best nursing focus?',
+      options: ['Tell the person that adults should manage stress independently.', 'Explore role demands, available support, coping strategies, and the person’s own priorities for care.', 'Discuss only physical symptoms because emotions are unrelated to health.'],
+      answer: 1,
+      explanation: 'Correct. Adult emotional wellbeing is closely connected with role strain, health, support systems, and practical coping options.'
+    }
+  ];
+  let quizIndex = 0;
+  let quizAnswered = false;
+  const quizOptions = $('#quizOptions');
+  const quizNext = $('#quizNext');
+
+  function renderQuizQuestion() {
+    const question = quizQuestions[quizIndex];
+    quizAnswered = false;
+    $('#quizLabel').textContent = `QUESTION 0${quizIndex + 1}`;
+    $('#quizQuestion').textContent = question.question;
+    $('#quizCurrent').textContent = `Question ${quizIndex + 1} of ${quizQuestions.length}`;
+    $('#quizFeedback').className = 'quiz-feedback';
+    $('#quizFeedback').textContent = 'Tap an answer to reveal the reasoning.';
+    quizOptions.innerHTML = question.options.map((option, index) => `<button class="quiz-option" data-index="${index}"><span>${String.fromCharCode(65 + index)}</span>${option}</button>`).join('');
+    $$('.quiz-option', quizOptions).forEach(button => button.addEventListener('click', () => answerQuiz(button)));
+    $$('#quizDots i').forEach((dot, index) => dot.classList.toggle('active', index === quizIndex));
+    quizNext.disabled = true;
+    quizNext.innerHTML = quizIndex === quizQuestions.length - 1 ? 'Replay check <span>↻</span>' : 'Next question <span>→</span>';
+  }
+
+  function answerQuiz(button) {
+    if (quizAnswered) return;
+    quizAnswered = true;
+    const selectedAnswer = Number(button.dataset.index);
+    const question = quizQuestions[quizIndex];
+    const correct = selectedAnswer === question.answer;
+    $$('.quiz-option', quizOptions).forEach(option => {
+      option.disabled = true;
+      if (Number(option.dataset.index) === question.answer) option.classList.add('correct');
+    });
+    if (!correct) button.classList.add('wrong');
+    const feedback = $('#quizFeedback');
+    feedback.className = `quiz-feedback ${correct ? 'correct' : 'wrong'}`;
+    feedback.textContent = correct ? question.explanation : `Try again mentally: ${question.explanation}`;
+    quizNext.disabled = false;
+  }
+
+  quizNext.addEventListener('click', () => {
+    if (!quizAnswered) return;
+    quizIndex = quizIndex === quizQuestions.length - 1 ? 0 : quizIndex + 1;
+    renderQuizQuestion();
+  });
+  renderQuizQuestion();
 })();
