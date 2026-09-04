@@ -1,5 +1,6 @@
 # Dependencies and generated files
 node_modules/
+.npm/
 
 # Runtime data created by the local API
 data/*.json
