@@ -158,8 +158,76 @@
     $('#mapStatText').textContent = fact.stat;
     $('#mapResult').innerHTML = `<p class="map-result-label">AT AROUND ${age === 0 ? 'BIRTH' : `AGE ${age}`}</p><h3>${fact.title}</h3><p>${fact.copy}</p><div class="map-chip-row">${fact.tags.map(tag => `<span>${tag}</span>`).join('')}</div>`;
   }
-  ageRange?.addEventListener('input', updateAgeMap);
   updateAgeMap();
+
+  // Auto-play the growth map while it is in view: 0 → 18 → 0 at a moderate pace.
+  const ageMapSection = $('#age-map');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const mapStepDuration = 430;
+  let mapDirection = 1;
+  let mapIsVisible = false;
+  let mapAutoplayTimer = null;
+  let mapResumeTimer = null;
+
+  function setMapAge(age) {
+    ageRange.value = String(age);
+    updateAgeMap();
+  }
+
+  function stopMapAutoplay() {
+    if (mapAutoplayTimer) {
+      window.clearInterval(mapAutoplayTimer);
+      mapAutoplayTimer = null;
+    }
+  }
+
+  function advanceGrowthMap() {
+    let nextAge = Number(ageRange.value) + mapDirection;
+    if (nextAge > 18) {
+      mapDirection = -1;
+      nextAge = 17;
+    } else if (nextAge < 0) {
+      mapDirection = 1;
+      nextAge = 1;
+    }
+    setMapAge(nextAge);
+  }
+
+  function startMapAutoplay() {
+    if (!mapIsVisible || reducedMotion.matches || mapAutoplayTimer) return;
+    mapAutoplayTimer = window.setInterval(advanceGrowthMap, mapStepDuration);
+  }
+
+  if (ageMapSection && ageRange) {
+    const mapObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        mapIsVisible = entry.isIntersecting;
+        if (mapIsVisible) {
+          // Each visit begins with the newborn stage, then moves forward and back.
+          window.clearTimeout(mapResumeTimer);
+          mapDirection = 1;
+          setMapAge(0);
+          startMapAutoplay();
+        } else {
+          stopMapAutoplay();
+        }
+      });
+    }, { threshold: .3 });
+    mapObserver.observe(ageMapSection);
+
+    // Manual exploration remains available. It pauses briefly, then the guided journey resumes.
+    ageRange.addEventListener('input', () => {
+      updateAgeMap();
+      stopMapAutoplay();
+      window.clearTimeout(mapResumeTimer);
+      mapResumeTimer = window.setTimeout(startMapAutoplay, 5000);
+    });
+
+    reducedMotion.addEventListener?.('change', () => {
+      stopMapAutoplay();
+      if (mapIsVisible) startMapAutoplay();
+    });
+  }
 
   // Emotion lab
   const emotions = {
