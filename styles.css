@@ -407,3 +407,10 @@ h1 em, h2 em { color: var(--coral); font-family: var(--serif); font-weight: 500;
   .component-grid { grid-template-columns:1fr; }
   .whole-person-panel { padding:20px 17px; }
 }
+
+/* Context lens within Topic II: family, culture, and equitable emotional support. */
+.life-context-callout { display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:17px; overflow:hidden; border:1px solid rgba(255,255,255,.17); border-radius:16px; background:rgba(255,255,255,.055); }
+.life-context-callout > div { min-height:144px; padding:21px 22px; border-right:1px solid rgba(255,255,255,.14); }.life-context-callout > div:last-child { border-right:0; }
+.life-context-callout span { display:block; margin-bottom:12px; color:var(--mint); font-family:var(--mono); font-size:7.5px; font-weight:700; letter-spacing:.08em; }
+.life-context-callout p { margin:0; color:#c8d2df; font-size:10px; line-height:1.62; }
+@media (max-width:760px) { .life-context-callout { grid-template-columns:1fr; gap:0; }.life-context-callout > div { min-height:0; padding:18px; border-right:0; border-bottom:1px solid rgba(255,255,255,.14); }.life-context-callout > div:last-child { border-bottom:0; } }
