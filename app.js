@@ -145,87 +145,97 @@
     18: { title: 'Independence with connection.', copy: 'Young adults continue refining emotional regulation, intimacy, and decision-making. Supportive networks and healthy help-seeking remain protective throughout life.', tags: ['independence', 'intimacy', 'support'], stat: 'At 18, emotional growth continues — development is lifelong.' }
   };
   const ageRange = $('#ageRange');
+  let displayedMapAge = null;
+
   function nearestFact(age) {
     return ageFacts[age] || ageFacts[Object.keys(ageFacts).map(Number).reduce((closest, current) => Math.abs(current - age) < Math.abs(closest - age) ? current : closest)];
   }
-  function updateAgeMap() {
-    const age = Number(ageRange.value);
+
+  function updateAgeMap(forceContent = false) {
+    const sliderPosition = Number(ageRange.value);
+    const age = Math.round(sliderPosition);
     const fact = nearestFact(age);
-    const percent = (age / 18) * 100;
+    const percent = (sliderPosition / 18) * 100;
     ageRange.style.setProperty('--range-progress', `${percent}%`);
+
+    // The thumb moves continuously while the supporting information changes only at whole ages.
+    if (!forceContent && age === displayedMapAge) return;
+    displayedMapAge = age;
     $('#ageValue').textContent = age === 0 ? '0' : age;
     $('#mapStatNumber').textContent = age === 0 ? '0' : age;
     $('#mapStatText').textContent = fact.stat;
     $('#mapResult').innerHTML = `<p class="map-result-label">AT AROUND ${age === 0 ? 'BIRTH' : `AGE ${age}`}</p><h3>${fact.title}</h3><p>${fact.copy}</p><div class="map-chip-row">${fact.tags.map(tag => `<span>${tag}</span>`).join('')}</div>`;
   }
-  updateAgeMap();
 
-  // Auto-play the growth map while it is in view: 0 → 18 → 0 at a moderate pace.
+  function setMapPosition(position, forceContent = false) {
+    ageRange.value = String(Math.max(0, Math.min(18, position)));
+    updateAgeMap(forceContent);
+  }
+
+  updateAgeMap(true);
+
+  // One smooth guided journey: 0 → 18 → 0. It begins only once when the map reaches view.
   const ageMapSection = $('#age-map');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const mapStepDuration = 430;
-  let mapDirection = 1;
-  let mapIsVisible = false;
-  let mapAutoplayTimer = null;
-  let mapResumeTimer = null;
+  const mapLegDuration = 8200;
+  let mapHasStarted = false;
+  let mapAnimationFrame = null;
+  let mapAnimationStartedAt = null;
 
-  function setMapAge(age) {
-    ageRange.value = String(age);
-    updateAgeMap();
+  function easeInOutSine(progress) {
+    return -(Math.cos(Math.PI * progress) - 1) / 2;
   }
 
-  function stopMapAutoplay() {
-    if (mapAutoplayTimer) {
-      window.clearInterval(mapAutoplayTimer);
-      mapAutoplayTimer = null;
+  function stopMapAnimation() {
+    if (mapAnimationFrame !== null) {
+      window.cancelAnimationFrame(mapAnimationFrame);
+      mapAnimationFrame = null;
     }
   }
 
-  function advanceGrowthMap() {
-    let nextAge = Number(ageRange.value) + mapDirection;
-    if (nextAge > 18) {
-      mapDirection = -1;
-      nextAge = 17;
-    } else if (nextAge < 0) {
-      mapDirection = 1;
-      nextAge = 1;
+  function animateGrowthMap(timestamp) {
+    if (mapAnimationStartedAt === null) mapAnimationStartedAt = timestamp;
+    const elapsed = timestamp - mapAnimationStartedAt;
+    const totalDuration = mapLegDuration * 2;
+    const outwardJourney = Math.min(1, elapsed / mapLegDuration);
+    const returnJourney = Math.min(1, Math.max(0, (elapsed - mapLegDuration) / mapLegDuration));
+    const position = elapsed <= mapLegDuration
+      ? 18 * easeInOutSine(outwardJourney)
+      : 18 * (1 - easeInOutSine(returnJourney));
+
+    setMapPosition(position);
+    if (elapsed < totalDuration) {
+      mapAnimationFrame = window.requestAnimationFrame(animateGrowthMap);
+    } else {
+      setMapPosition(0, true);
+      mapAnimationFrame = null;
     }
-    setMapAge(nextAge);
   }
 
-  function startMapAutoplay() {
-    if (!mapIsVisible || reducedMotion.matches || mapAutoplayTimer) return;
-    mapAutoplayTimer = window.setInterval(advanceGrowthMap, mapStepDuration);
+  function startMapAnimation() {
+    if (mapHasStarted || reducedMotion.matches) return;
+    mapHasStarted = true;
+    mapAnimationStartedAt = null;
+    setMapPosition(0, true);
+    mapAnimationFrame = window.requestAnimationFrame(animateGrowthMap);
   }
 
   if (ageMapSection && ageRange) {
     const mapObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        mapIsVisible = entry.isIntersecting;
-        if (mapIsVisible) {
-          // Each visit begins with the newborn stage, then moves forward and back.
-          window.clearTimeout(mapResumeTimer);
-          mapDirection = 1;
-          setMapAge(0);
-          startMapAutoplay();
-        } else {
-          stopMapAutoplay();
+        if (entry.isIntersecting && !mapHasStarted) {
+          startMapAnimation();
+          mapObserver.unobserve(ageMapSection);
         }
       });
     }, { threshold: .3 });
     mapObserver.observe(ageMapSection);
 
-    // Manual exploration remains available. It pauses briefly, then the guided journey resumes.
+    // Manual movement remains available and cancels the automatic journey rather than restarting it.
     ageRange.addEventListener('input', () => {
-      updateAgeMap();
-      stopMapAutoplay();
-      window.clearTimeout(mapResumeTimer);
-      mapResumeTimer = window.setTimeout(startMapAutoplay, 5000);
-    });
-
-    reducedMotion.addEventListener?.('change', () => {
-      stopMapAutoplay();
-      if (mapIsVisible) startMapAutoplay();
+      mapHasStarted = true;
+      stopMapAnimation();
+      updateAgeMap(true);
     });
   }
 
