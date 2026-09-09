@@ -1,0 +1,8 @@
+.git
+.gitignore
+.vercel
+node_modules
+data
+*.pdf
+generate_*.py
+README.md

@@ -422,3 +422,97 @@ h1 em, h2 em { color: var(--coral); font-family: var(--serif); font-weight: 500;
 .protective-balance { display:grid; grid-template-columns:1fr 1fr; gap:1px; margin-top:13px; overflow:hidden; border-radius:14px; background:var(--line); }.protective-balance > div { min-height:107px; padding:19px 21px; background:var(--white); }.protective-balance > div:last-child { background:#fff1ed; }.protective-balance span { display:block; margin-bottom:9px; color:var(--mint-deep); font-family:var(--mono); font-size:7.5px; font-weight:700; letter-spacing:.08em; }.protective-balance > div:last-child span { color:#bf5340; }.protective-balance p { margin:0; color:#5c6980; font-size:10px; line-height:1.6; }
 @media (max-width:930px) { .development-context { grid-template-columns:1fr; gap:23px; }.development-context-grid article { min-height:0; } }
 @media (max-width:760px) { .development-context { margin-top:14px; padding:24px 19px; border-radius:16px; }.development-context-grid { grid-template-columns:1fr; gap:8px; }.development-context-grid article { padding:17px 15px; }.development-context-grid p { font-size:10px; }.protective-balance { grid-template-columns:1fr; gap:1px; }.protective-balance > div { min-height:0; padding:17px 16px; } }
+
+/* Comfort-reading pass: raise small supporting copy and strengthen contrast. */
+.brand { font-size:12px; }
+.topic-badge { font-size:10px; }
+.signature-label, .college-line { font-size:9px; }
+.mini-date > span { font-size:9px !important; }
+.art-caption, .scroll-cue { font-size:9px; }
+.signal-item p { color:#d5dbe5; font-size:12.3px; line-height:1.68; }
+.heading-row > p, .split-heading > p { font-size:14px; line-height:1.7; }
+.objectives-intro > p:not(.eyebrow) { font-size:14px; }
+.objective-card p { font-size:12px; line-height:1.62; }
+
+.stage-tab small, .life-stage-tab > span, .life-stage-tab small { font-size:9px; }
+.stage-kicker { font-size:10px; }
+.stage-info > p { font-size:14px; line-height:1.72; }
+.milestone-list span { font-size:11px; line-height:1.58; }
+.theory-tag { font-size:11px; line-height:1.55; }
+.note-card p { font-size:12px; line-height:1.65; }
+
+.map-copy > p:not(.eyebrow), .nursing-intro > p:not(.eyebrow):not(.quote-credit), .quiz-intro > p:not(.eyebrow) { font-size:14px; }
+.map-stat span { font-size:11.5px; line-height:1.65; }
+.range-labels { font-size:9.5px; }
+.map-result > p:not(.map-result-label) { font-size:12px; line-height:1.68; }
+.map-chip-row span { font-size:9px; }
+.emotion-option { font-size:12px; }
+.column-label { font-size:9px; }
+.emotion-columns p { font-size:12px; line-height:1.65; }
+
+.case-topline, .quote-credit { font-size:10px; }
+.case-option { font-size:12px; line-height:1.48; }
+.case-feedback { font-size:11px; line-height:1.58; }
+.text-button { font-size:12px; }
+.theory-card p { font-size:11.5px; line-height:1.64; }
+.learn-link { font-size:10px; }
+.theory-detail > div:nth-child(2)>p:not(.stage-kicker), .practice-box p { font-size:11px; line-height:1.65; }
+.quiz-progress-text, .quiz-label { font-size:10px; }
+.quiz-practice-pill { font-size:9px; }
+.quiz-option { font-size:12px; line-height:1.55; }
+.quiz-feedback { font-size:11px; line-height:1.58; }
+.quiz-next { font-size:11px; }
+
+.reference-notice p { font-size:12px; line-height:1.68; }
+.reference-notice > span, .reference-author { font-size:10px; }
+.reference-copy > p:not(.reference-author):not(.reference-pages), .reference-pages { font-size:11px; line-height:1.6; }
+.reference-link { font-size:9.5px; }
+.takeaway > p:not(.eyebrow), .life-takeaway > p:not(.eyebrow) { font-size:14px; }
+.site-footer p { font-size:9px; }
+
+/* Topic I extended content */
+.concept-anchor-card > p:last-child { font-size:12px; line-height:1.65; }
+.components-intro > p:not(.eyebrow) { font-size:12px; line-height:1.65; }
+.component-grid article p { font-size:10.5px; line-height:1.58; }
+.context-reminder p { font-size:12px; line-height:1.65; }
+.development-context-intro > p:not(.eyebrow) { font-size:11.5px; }
+.development-context-grid p { font-size:10.5px; line-height:1.6; }
+.protective-balance p { font-size:11.5px; line-height:1.62; }
+.regulation-heading .heading-row > p { font-size:14px; }
+.regulation-step p { font-size:12px; line-height:1.63; }
+.regulation-detail p, .resilience-note p { font-size:11.5px; line-height:1.63; }
+.assessment-card p { font-size:12px; line-height:1.64; }
+.assessment-card small, .communication-label { font-size:8.5px; }
+.communication-card li { font-size:11px; line-height:1.55; }
+
+/* Topic II extended content */
+.life-stage-tab b { font-size:12px; }
+.life-orbit > p { font-size:9px; }
+.life-orbit-label { font-size:8px; }
+.life-course-copy > p:not(.stage-kicker) { font-size:13px; line-height:1.7; }
+.life-insights strong { font-size:12px; }
+.life-care-note p { font-size:11px; line-height:1.58; }
+.life-note { font-size:11px; }
+.influence-card p { font-size:12px; line-height:1.65; }
+.life-context-callout p { font-size:11px; line-height:1.65; }
+.care-stage { font-size:11px; }
+.care-guide-label { font-size:10px; }
+.care-guide-card > p { font-size:13px; line-height:1.7; }
+.care-guide-columns p { font-size:11px; line-height:1.62; }
+.lifespan-principle p { font-size:12px; line-height:1.65; }
+.principle-prompt p { font-size:12px; line-height:1.64; }
+.adult-chapter-card > p { font-size:12px; line-height:1.65; }
+.adult-chapter-card div span { font-size:11px; line-height:1.55; }
+.transition-card p { font-size:12px; line-height:1.63; }
+.whole-person-grid p { font-size:11px; line-height:1.64; }
+.transition-footnote { font-size:12px; line-height:1.66; }
+
+@media (max-width:760px) {
+  .brand { font-size:10px; }
+  .topic-badge { font-size:9px; }
+  .main-nav a { font-size:12px; }
+  .heading-row > p, .split-heading > p, .objectives-intro > p:not(.eyebrow), .map-copy > p:not(.eyebrow), .nursing-intro > p:not(.eyebrow):not(.quote-credit), .quiz-intro > p:not(.eyebrow) { font-size:13px; }
+  .life-orbit-label { font-size:7px; }
+  .life-orbit > p { font-size:7.5px; }
+  .component-grid article p, .development-context-grid p { font-size:10px; }
+}
